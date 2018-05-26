@@ -14,23 +14,26 @@ app.use(express.static('public'));
 // Set EJS as the view engine
 app.set("view engine", "ejs");
 
+// Enable urlencoded body parsing
+app.use(express.urlencoded({extended: true}));
+
 // Handle get requests to the "/" page
 app.get("/", (req, resp) => {
     resp.render("landing");
 });
 
-// Enable urlencoded body parsing
-app.use(express.urlencoded({extended: true}));
+// Handle get requests to the "/campgrounds" page
+app.get("/campgrounds", (req, res) => {
+    res.render("campgrounds", {campgrounds:campgrounds});
+});
 
 // Handle post requests to the "/campgrounds" page
 app.post("/campgrounds", (req, res) => {
-    res.send("You hit the post route");
-});
-
-// Handle get requests to the "/campgrounds" page
-app.get("/campgrounds", (req, res) => {
-
-    res.render("campgrounds", {campgrounds:campgrounds});
+    if(req.body && req.body.name && req.body.image) {
+        var newCG = {name: req.body.name, image: req.body.image};
+        campgrounds.push(newCG);
+        res.redirect("/campgrounds");
+    }
 });
 
 app.get("/campgrounds/new", (req, res) => {
