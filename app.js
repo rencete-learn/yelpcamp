@@ -20,13 +20,25 @@ app.use(express.static('public'));
 // Set EJS as the view engine
 app.set("view engine", "ejs");
 
-// Enable urlencoded body parsing
+// Enable urlencoded body parsing for POST html types
 app.use(express.urlencoded({extended: true}));
 
 // Handle get requests to the "/" page
 app.get("/", (req, resp) => {
     resp.render("landing");
 });
+
+// Add mongoose ORM
+var mongoose = require('mongoose');
+// Connect to local mongodb instance and yelpcamp db
+mongoose.connect("mongodb://localhost/yelpcamp");
+// Define Campground schema
+var CampgroundSchema = mongoose.Schema({
+    name: String,
+    image: String
+});
+// Create Campground model
+var Campground = mongoose.model("Campground", CampgroundSchema);
 
 // Handle get requests to the "/campgrounds" page
 app.get("/campgrounds", (req, res) => {
