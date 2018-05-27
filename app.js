@@ -1,16 +1,3 @@
-// Temporary campgrounds list (before being added to database)
-var campgrounds = [
-    { name: "Salmon Creek", image: "https://images.pexels.com/photos/699558/pexels-photo-699558.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Granite Hill", image: "https://images.pexels.com/photos/939723/pexels-photo-939723.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Mountain Goat's Rest", image: "https://images.pexels.com/photos/14287/pexels-photo-14287.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Salmon Creek", image: "https://images.pexels.com/photos/699558/pexels-photo-699558.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Granite Hill", image: "https://images.pexels.com/photos/939723/pexels-photo-939723.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Mountain Goat's Rest", image: "https://images.pexels.com/photos/14287/pexels-photo-14287.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Salmon Creek", image: "https://images.pexels.com/photos/699558/pexels-photo-699558.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Granite Hill", image: "https://images.pexels.com/photos/939723/pexels-photo-939723.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"},
-    { name: "Mountain Goat's Rest", image: "https://images.pexels.com/photos/14287/pexels-photo-14287.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"}
-]
-
 // Use express web application framework
 var express = require("express");
 var app = express();
@@ -42,18 +29,35 @@ var Campground = mongoose.model("Campground", CampgroundSchema);
 
 // Handle get requests to the "/campgrounds" page
 app.get("/campgrounds", (req, res) => {
-    res.render("campgrounds", {campgrounds:campgrounds});
+    Campground.find({}, (err, campgrounds) => {
+        if(err) {
+            res.send("An error occurred while retrieving campgrounds");
+            console.log(err);
+        } else {
+            res.render("campgrounds", { campgrounds:campgrounds });
+        }
+    })
 });
 
 // Handle post requests to the "/campgrounds" page
 app.post("/campgrounds", (req, res) => {
     if(req.body && req.body.name && req.body.image) {
         var newCG = {name: req.body.name, image: req.body.image};
-        campgrounds.push(newCG);
-        res.redirect("/campgrounds");
+        Campground.create(newCG, (err, campground) => {
+            if(err) {
+                console.log("Error saving to database");
+                console.log(err);
+            } else {
+                res.redirect("/campgrounds");
+            }
+        })
+    } else {
+        console.log("Error while reading request body");
+        console.log(req.body);
     }
 });
 
+// Show create campground page
 app.get("/campgrounds/new", (req, res) => {
     res.render("new.ejs");
 });
