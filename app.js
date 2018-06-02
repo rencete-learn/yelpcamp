@@ -2,13 +2,15 @@
 var express = require("express");
 var app = express();
 
-// Identify public folders
+// Identify public folders for common assets like scripts and css
 app.use(express.static('public'));
-// Set EJS as the view engine
+
+// Set EJS as the view engine (no need to add file extension of .ejs for partials)
 app.set("view engine", "ejs");
 
 // Enable urlencoded body parsing for POST html types
-app.use(express.urlencoded({extended: true}));
+// Allows POST method types of forms to populate req.body
+app.use(express.urlencoded({extended: true})); // Uses body-parser
 
 // Handle get requests to the "/" page
 app.get("/", (req, resp) => {
@@ -19,14 +21,13 @@ app.get("/", (req, resp) => {
 var mongoose = require('mongoose');
 // Connect to local mongodb instance and yelpcamp db
 mongoose.connect("mongodb://localhost/yelpcamp");
-// Define Campground schema
-var CampgroundSchema = mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
-// Create Campground model
-var Campground = mongoose.model("Campground", CampgroundSchema);
+
+// Add models
+var Campground = require("./models/Campground");
+
+// Seed the data
+var seed = require("./seed");
+seed();
 
 // Handle get requests to the "/campgrounds" page
 app.get("/campgrounds", (req, res) => {
@@ -65,14 +66,12 @@ app.get("/campgrounds/new", (req, res) => {
 
 // SHOW route, show information about 1 specific campground
 app.get("/campgrounds/:id", (req, res) => {
-    console.log(req.params.id);
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log("An error occurred while retrieving campground with id=" + req.params.id);
             console.log(err);
             res.send("Error");
         } else {
-            console.log(campground);
             res.render("show", campground);
         }
     })
