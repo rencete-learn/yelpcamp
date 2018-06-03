@@ -24,6 +24,7 @@ mongoose.connect("mongodb://localhost/yelpcamp");
 
 // Add models
 var Campground = require("./models/Campground");
+var Comment = require("./models/Comment");
 
 // Seed the data
 var seed = require("./seed");
@@ -36,7 +37,7 @@ app.get("/campgrounds", (req, res) => {
             res.send("An error occurred while retrieving campgrounds");
             console.log(err);
         } else {
-            res.render("campgrounds", { campgrounds:campgrounds });
+            res.render("campgrounds/campgrounds", { campgrounds:campgrounds });
         }
     })
 });
@@ -61,7 +62,7 @@ app.post("/campgrounds", (req, res) => {
 
 // Show create campground page
 app.get("/campgrounds/new", (req, res) => {
-    res.render("new.ejs");
+    res.render("campgrounds/new.ejs");
 });
 
 // SHOW route, show information about 1 specific campground
@@ -73,7 +74,38 @@ app.get("/campgrounds/:id", (req, res) => {
             console.log(err);
             res.send("Error");
         } else {
-            res.render("show", {campground: campground});
+            res.render("campgrounds/show", {campground: campground});
+        }
+    })
+})
+
+// NEW route for comments
+app.get("/campgrounds/:id/comments/new", (req, res) => {
+    Campground.findById(req.params.id, (err, campground) => {
+        if(err) {
+            console.log(err);
+        } else {
+            res.render("comments/new", {campground: campground});
+        }
+    })
+})
+
+// CREATE route for comments
+app.post("/campgrounds/:id/comments", (req, res) => {
+    Campground.findById(req.params.id, (err, campground) => {
+        if(err) {
+            console.log(err);
+        } else {
+            Comment.create(req.body.comment, (err, comment) => {
+                if(err) {
+                    console.log(err);
+                    res.redirect("/campgrounds");
+                } else {
+                    campground.comments.push(comment);
+                    campground.save();
+                    res.redirect("/campgrounds/" + campground._id);
+                }
+            })
         }
     })
 })
