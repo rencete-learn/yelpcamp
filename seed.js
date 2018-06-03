@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 var Campground = require("./models/Campground"); // import Campground model
-
+var Comment = require("./models/Comment"); // import Comment model
 var campgroundsData = [
     { 
         name: "Starry Starry Night Camp",
@@ -25,15 +25,34 @@ var seed = function() {
             console.log(err);
         } else {
             console.log("Removed campgrounds");
-            campgroundsData.forEach((data) => {
-                Campground.create(data, (err, campground) => {
-                    if(err) {
-                        console.log(err);
-                    }
-                    else {
-                        console.log("Added a campground");
-                    }
-                })
+            Comment.remove({}, (err) => {
+                if(err) {
+                    console.log(err);
+                } else {
+                    console.log("Removed comments");
+                    campgroundsData.forEach((data) => {
+                        Campground.create(data, (err, campground) => {
+                            if(err) {
+                                console.log(err);
+                            }
+                            else {
+                                console.log("Added a campground");
+                                Comment.create({
+                                    text: "This place is great, but I wish there was internet",
+                                    author: "Homer"
+                                }, (err, comment) => {
+                                    if(err) {
+                                        console.log(err);
+                                    } else {
+                                        campground.comments.push(comment);
+                                        campground.save();
+                                        console.log("Created new comment");
+                                    }
+                                })
+                            }
+                        })
+                    })
+                }
             })
         }
     })

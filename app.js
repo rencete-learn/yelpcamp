@@ -66,7 +66,8 @@ app.get("/campgrounds/new", (req, res) => {
 
 // SHOW route, show information about 1 specific campground
 app.get("/campgrounds/:id", (req, res) => {
-    Campground.findById(req.params.id, (err, campground) => {
+    // populate method is used to retrieve the linked model and get their data
+    Campground.findById(req.params.id).populate("comments").exec((err, campground) => {
         if(err) {
             console.log("An error occurred while retrieving campground with id=" + req.params.id);
             console.log(err);
