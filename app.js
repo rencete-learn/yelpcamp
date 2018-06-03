@@ -73,7 +73,7 @@ app.get("/campgrounds/:id", (req, res) => {
             console.log(err);
             res.send("Error");
         } else {
-            res.render("show", campground);
+            res.render("show", {campground: campground});
         }
     })
 })
