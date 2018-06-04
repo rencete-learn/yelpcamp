@@ -3,7 +3,7 @@ var express = require("express");
 var app = express();
 
 // Identify public folders for common assets like scripts and css
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public')); // __dirname represents the directory where this script (app.js) is running
 
 // Set EJS as the view engine (no need to add file extension of .ejs for partials)
 app.set("view engine", "ejs");
