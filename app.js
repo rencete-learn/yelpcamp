@@ -22,9 +22,15 @@ var mongoose = require('mongoose');
 // Connect to local mongodb instance and yelpcamp db
 mongoose.connect("mongodb://localhost/yelpcamp");
 
+// Middleware setup
+var passport = require("passport");
+var localStrategy = require("passport-local");
+
+
 // Add models
 var Campground = require("./models/Campground");
 var Comment = require("./models/Comment");
+var User = require("./models/User");
 
 // Seed the data
 var seed = require("./seed");
