@@ -95,7 +95,7 @@ app.get("/campgrounds/:id", (req, res) => {
 })
 
 // NEW route for comments
-app.get("/campgrounds/:id/comments/new", (req, res) => {
+app.get("/campgrounds/:id/comments/new", isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -106,7 +106,7 @@ app.get("/campgrounds/:id/comments/new", (req, res) => {
 })
 
 // CREATE route for comments
-app.post("/campgrounds/:id/comments", (req, res) => {
+app.post("/campgrounds/:id/comments", isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -159,6 +159,14 @@ app.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/campgrounds");
 })
+
+// Middleware
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+}
 
 // Start the server and listen to port
 app.listen(8080, () => {
