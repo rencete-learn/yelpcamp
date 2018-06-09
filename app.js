@@ -131,7 +131,7 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-    User.register(new User({username: req.body.username}), req.body.password, (req, user) => {
+    User.register(new User({username: req.body.username}), req.body.password, (err, user) => {
         if(err) {
             console.log(err);
             return res.render("register");
@@ -140,6 +140,18 @@ app.post("/register", (req, res) => {
             res.redirect("/campgrounds");
         })
     });
+})
+
+// Login routes
+app.get("/login", (req, res) => {
+    res.render("login");
+})
+
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/campgrounds",
+    failureRedirect: "/login"
+}), (req, res) => {
+    
 })
 
 // Start the server and listen to port
