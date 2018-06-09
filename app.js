@@ -12,11 +12,6 @@ app.set("view engine", "ejs");
 // Allows POST method types of forms to populate req.body
 app.use(express.urlencoded({extended: true})); // Uses body-parser
 
-// Handle get requests to the "/" page
-app.get("/", (req, resp) => {
-    resp.render("landing");
-});
-
 // Add mongoose ORM
 var mongoose = require('mongoose');
 // Connect to local mongodb instance and yelpcamp db
@@ -41,9 +36,20 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Middleware to get the current logged in user
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+})
+
 // Seed the data
 var seed = require("./seed");
 seed();
+
+// Handle get requests to the "/" page
+app.get("/", (req, resp) => {
+    resp.render("landing");
+});
 
 // Handle get requests to the "/campgrounds" page
 app.get("/campgrounds", (req, res) => {
