@@ -125,6 +125,23 @@ app.post("/campgrounds/:id/comments", (req, res) => {
     })
 })
 
+// AUTH Routes
+app.get("/register", (req, res) => {
+    res.render("register");
+})
+
+app.post("/register", (req, res) => {
+    User.register(new User({username: req.body.username}), req.body.password, (req, user) => {
+        if(err) {
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, () => {
+            res.redirect("/campgrounds");
+        })
+    });
+})
+
 // Start the server and listen to port
 app.listen(8080, () => {
     console.log("Server has started");
