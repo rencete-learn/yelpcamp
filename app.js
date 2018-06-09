@@ -154,6 +154,12 @@ app.post("/login", passport.authenticate("local", {
     
 })
 
+// Logout route
+app.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect("/campgrounds");
+})
+
 // Start the server and listen to port
 app.listen(8080, () => {
     console.log("Server has started");
