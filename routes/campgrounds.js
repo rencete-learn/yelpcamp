@@ -42,7 +42,7 @@ router.post("/", isLoggedIn, (req, res) => {
 
 // Show NEW campground page
 router.get("/new", isLoggedIn, (req, res) => {
-    res.render("campgrounds/new.ejs");
+    res.render("campgrounds/new");
 });
 
 // SHOW route, show information about 1 specific campground
@@ -55,6 +55,29 @@ router.get("/:id", (req, res) => {
             res.send("Error");
         } else {
             res.render("campgrounds/show", {campground: campground});
+        }
+    })
+})
+
+// EDIT route to show edit page
+router.get("/:id/edit", (req, res) => {
+    Campground.findById(req.params.id, (err, campground) => {
+        if(err) {
+            console.log(err);
+            res.redirect("/campgrounds");
+        } else {
+            res.render("campgrounds/edit", {campground: campground});
+        }
+    })
+})
+
+// UPDATE route to update the campground data
+router.put("/:id", (req, res) => {
+    Campground.findByIdAndUpdate(req.params.id, req.body.campground, (err, updatedCampground) => {
+        if(err) {
+            console.log(err);
+        } else {
+            res.redirect("/campgrounds/" + updatedCampground._id);
         }
     })
 })

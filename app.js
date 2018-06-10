@@ -4,6 +4,7 @@ var app = express();
 // Add mongoose ORM
 var mongoose = require('mongoose');
 // Middleware setup
+var methodOverride = require("method-override");
 var passport = require("passport");
 var localStrategy = require("passport-local");
 // Add models
@@ -19,6 +20,9 @@ var commentRoutes = require("./routes/comments");
 
 // Connect to local mongodb instance and yelpcamp db
 mongoose.connect("mongodb://localhost/yelpcamp");
+
+// Override using query string to be able to use PUT verbs
+app.use(methodOverride("_method"));
 
 // Identify public folders for common assets like scripts and css
 app.use(express.static(__dirname + '/public')); // __dirname represents the directory where this script (app.js) is running
