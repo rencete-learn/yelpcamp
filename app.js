@@ -14,8 +14,8 @@ var campgroundRoutes = require("./routes/campgrounds");
 var commentRoutes = require("./routes/comments");
 
 // Seed the data
-var seed = require("./seed");
-seed();
+// var seed = require("./seed");
+// seed();
 
 // Connect to local mongodb instance and yelpcamp db
 mongoose.connect("mongodb://localhost/yelpcamp");
