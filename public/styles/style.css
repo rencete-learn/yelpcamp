@@ -1,3 +1,7 @@
 .figure-caption {
     color: black;
 }
+
+#form-delete {
+    display: inline;
+}
