@@ -49,9 +49,9 @@ app.use((req, res, next) => {
 })
 
 // Use the routes
-app.use(indexRoutes);
-app.use(campgroundRoutes);
-app.use(commentRoutes);
+app.use("/", indexRoutes);
+app.use("/campgrounds", campgroundRoutes);
+app.use("/campgrounds/:id/comments", commentRoutes);
 
 // Start the server and listen to port
 app.listen(8080, () => {

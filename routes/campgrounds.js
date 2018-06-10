@@ -3,7 +3,7 @@ var router = express.Router();
 var Campground = require("../models/Campground");
 
 // Handle get requests to the "/campgrounds" page
-router.get("/campgrounds", (req, res) => {
+router.get("/", (req, res) => {
     Campground.find({}, (err, campgrounds) => {
         if(err) {
             res.send("An error occurred while retrieving campgrounds");
@@ -15,7 +15,7 @@ router.get("/campgrounds", (req, res) => {
 });
 
 // Handle post requests to the "/campgrounds" page
-router.post("/campgrounds", (req, res) => {
+router.post("/", (req, res) => {
     if(req.body && req.body.name && req.body.image && req.body.description) {
         var newCG = {name: req.body.name, image: req.body.image, description: req.body.description};
         Campground.create(newCG, (err, campground) => {
@@ -33,12 +33,12 @@ router.post("/campgrounds", (req, res) => {
 });
 
 // Show create campground page
-router.get("/campgrounds/new", (req, res) => {
+router.get("/new", (req, res) => {
     res.render("campgrounds/new.ejs");
 });
 
 // SHOW route, show information about 1 specific campground
-router.get("/campgrounds/:id", (req, res) => {
+router.get("/:id", (req, res) => {
     // populate method is used to retrieve the linked model and get their data
     Campground.findById(req.params.id).populate("comments").exec((err, campground) => {
         if(err) {

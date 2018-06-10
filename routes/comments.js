@@ -1,10 +1,10 @@
 var express = require("express");
-var router = express.Router();
+var router = express.Router({mergeParams: true});
 var Campground = require("../models/Campground");
 var Comment = require("../models/Comment");
 
 // NEW route for comments
-router.get("/campgrounds/:id/comments/new", isLoggedIn, (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -15,7 +15,7 @@ router.get("/campgrounds/:id/comments/new", isLoggedIn, (req, res) => {
 })
 
 // CREATE route for comments
-router.post("/campgrounds/:id/comments", isLoggedIn, (req, res) => {
+router.post("/", isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
