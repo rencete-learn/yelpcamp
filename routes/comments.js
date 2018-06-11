@@ -70,6 +70,18 @@ router.put("/:cid", (req, res) => {
     })
 })
 
+// DESTROY route for comments
+router.delete("/:cid", (req, res) => {
+    Comment.findByIdAndRemove(req.params.cid, (err) => {
+        if(err) {
+            console.log(err);
+            res.redirect("back");
+        } else {
+            res.redirect("/campgrounds/" + req.params.id);
+        }
+    })
+})
+
 // Middleware
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
