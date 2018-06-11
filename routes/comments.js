@@ -40,7 +40,7 @@ router.post("/", isLoggedIn, (req, res) => {
 })
 
 // EDIT route for comments
-router.get("/:cid/edit", isLoggedIn, (req, res) => {
+router.get("/:cid/edit", isLoggedIn, isCommentAuthor, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -59,7 +59,7 @@ router.get("/:cid/edit", isLoggedIn, (req, res) => {
 })
 
 // UPDATE route for comments
-router.put("/:cid", (req, res) => {
+router.put("/:cid", isLoggedIn, isCommentAuthor, (req, res) => {
     Comment.findByIdAndUpdate(req.params.cid, req.body.comment, (err, comment) => {
         if(err) {
             console.log(err);
@@ -71,7 +71,7 @@ router.put("/:cid", (req, res) => {
 })
 
 // DESTROY route for comments
-router.delete("/:cid", (req, res) => {
+router.delete("/:cid", isLoggedIn, isCommentAuthor, (req, res) => {
     Comment.findByIdAndRemove(req.params.cid, (err) => {
         if(err) {
             console.log(err);
@@ -88,6 +88,23 @@ function isLoggedIn(req, res, next) {
         return next();
     }
     res.redirect("/login");
+}
+
+function isCommentAuthor(req, res, next) {
+    Comment.findById(req.params.cid, (err, comment) => {
+        console.log(comment);
+        console.log(req.user);
+        if(err) {
+            console.log(err);
+            res.redirect("back");
+        } else {
+            if(comment.author.id.equals(req.user.id)) {
+                next();
+            } else {
+                res.redirect("back");
+            }
+        }
+    })
 }
 
 module.exports = router;

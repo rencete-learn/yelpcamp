@@ -108,7 +108,7 @@ function isCampgroundAuthor(req, res, next) {
             console.log(err);
             res.redirect("back");
         } else {
-            if(campground.author.id.equals(req.user._id)) {
+            if(campground.author.id.equals(req.user.id)) {
                 next();
             } else {
                 res.redirect("back");
