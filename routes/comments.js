@@ -2,9 +2,10 @@ var express = require("express");
 var router = express.Router({mergeParams: true});
 var Campground = require("../models/Campground");
 var Comment = require("../models/Comment");
+var middleware = require("../middleware");
 
 // NEW route for comments
-router.get("/new", isLoggedIn, (req, res) => {
+router.get("/new", middleware.isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -15,7 +16,7 @@ router.get("/new", isLoggedIn, (req, res) => {
 })
 
 // CREATE route for comments
-router.post("/", isLoggedIn, (req, res) => {
+router.post("/", middleware.isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -40,7 +41,7 @@ router.post("/", isLoggedIn, (req, res) => {
 })
 
 // EDIT route for comments
-router.get("/:cid/edit", isLoggedIn, isCommentAuthor, (req, res) => {
+router.get("/:cid/edit", middleware.isLoggedIn, middleware.isCommentAuthor, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -59,7 +60,7 @@ router.get("/:cid/edit", isLoggedIn, isCommentAuthor, (req, res) => {
 })
 
 // UPDATE route for comments
-router.put("/:cid", isLoggedIn, isCommentAuthor, (req, res) => {
+router.put("/:cid", middleware.isLoggedIn, middleware.isCommentAuthor, (req, res) => {
     Comment.findByIdAndUpdate(req.params.cid, req.body.comment, (err, comment) => {
         if(err) {
             console.log(err);
@@ -71,7 +72,7 @@ router.put("/:cid", isLoggedIn, isCommentAuthor, (req, res) => {
 })
 
 // DESTROY route for comments
-router.delete("/:cid", isLoggedIn, isCommentAuthor, (req, res) => {
+router.delete("/:cid", middleware.isLoggedIn, middleware.isCommentAuthor, (req, res) => {
     Comment.findByIdAndRemove(req.params.cid, (err) => {
         if(err) {
             console.log(err);
@@ -81,30 +82,5 @@ router.delete("/:cid", isLoggedIn, isCommentAuthor, (req, res) => {
         }
     })
 })
-
-// Middleware
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
-
-function isCommentAuthor(req, res, next) {
-    Comment.findById(req.params.cid, (err, comment) => {
-        console.log(comment);
-        console.log(req.user);
-        if(err) {
-            console.log(err);
-            res.redirect("back");
-        } else {
-            if(comment.author.id.equals(req.user.id)) {
-                next();
-            } else {
-                res.redirect("back");
-            }
-        }
-    })
-}
 
 module.exports = router;

@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Campground = require("../models/Campground");
+var middleware = require("../middleware");
 
 // Handle get requests to the "/campgrounds" page
 router.get("/", (req, res) => {
@@ -15,7 +16,7 @@ router.get("/", (req, res) => {
 });
 
 // Handle CREATE requests to the "/campgrounds" page
-router.post("/", isLoggedIn, (req, res) => {
+router.post("/", middleware.isLoggedIn, (req, res) => {
     if(req.body && req.body.name && req.body.image && req.body.description) {
         var newCG = {
             name: req.body.name,
@@ -41,7 +42,7 @@ router.post("/", isLoggedIn, (req, res) => {
 });
 
 // Show NEW campground page
-router.get("/new", isLoggedIn, (req, res) => {
+router.get("/new", middleware.isLoggedIn, (req, res) => {
     res.render("campgrounds/new");
 });
 
@@ -60,7 +61,7 @@ router.get("/:id", (req, res) => {
 })
 
 // EDIT route to show edit page
-router.get("/:id/edit", isLoggedIn, isCampgroundAuthor, (req, res) => {
+router.get("/:id/edit", middleware.isLoggedIn, middleware.isCampgroundAuthor, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
         if(err) {
             console.log(err);
@@ -72,7 +73,7 @@ router.get("/:id/edit", isLoggedIn, isCampgroundAuthor, (req, res) => {
 })
 
 // UPDATE route to update the campground data
-router.put("/:id", isLoggedIn, isCampgroundAuthor, (req, res) => {
+router.put("/:id", middleware.isLoggedIn, middleware.isCampgroundAuthor, (req, res) => {
     Campground.findByIdAndUpdate(req.params.id, req.body.campground, (err, updatedCampground) => {
         if(err) {
             console.log(err);
@@ -83,7 +84,7 @@ router.put("/:id", isLoggedIn, isCampgroundAuthor, (req, res) => {
 })
 
 // DESTROY route to remove campground
-router.delete("/:id", isLoggedIn, isCampgroundAuthor, (req, res) => {
+router.delete("/:id", middleware.isLoggedIn, middleware.isCampgroundAuthor, (req, res) => {
     Campground.findByIdAndRemove(req.params.id, (err) => {
         if(err) {
             console.log(err);
@@ -93,28 +94,5 @@ router.delete("/:id", isLoggedIn, isCampgroundAuthor, (req, res) => {
         }
     })
 })
-
-// Middleware
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
-
-function isCampgroundAuthor(req, res, next) {
-    Campground.findById(req.params.id, (err, campground) => {
-        if(err) {
-            console.log(err);
-            res.redirect("back");
-        } else {
-            if(campground.author.id.equals(req.user.id)) {
-                next();
-            } else {
-                res.redirect("back");
-            }
-        }
-    })
-}
 
 module.exports = router;
