@@ -24,13 +24,11 @@ var Middleware = function() {
     this.isCommentAuthor = createObjAuthorCheck(Comment, "cid");
 }
 
-Middleware.prototype = {
-    isLoggedIn : function(req, res, next) {
-        if(req.isAuthenticated()) {
-            return next();
-        }
-        res.redirect("/login");
+Middleware.prototype.isLoggedIn = function(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next();
     }
+    res.redirect("/login");
 }
 
 module.exports = new Middleware();
