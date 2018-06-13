@@ -28,6 +28,7 @@ Middleware.prototype.isLoggedIn = function(req, res, next) {
     if(req.isAuthenticated()) {
         return next();
     }
+    req.flash("warning", "Please login first");
     res.redirect("/login");
 }
 

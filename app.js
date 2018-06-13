@@ -13,6 +13,8 @@ var User = require("./models/User");
 var indexRoutes = require("./routes/index");
 var campgroundRoutes = require("./routes/campgrounds");
 var commentRoutes = require("./routes/comments");
+// Flash messages
+var flash = require("connect-flash");
 
 // Seed the data
 // var seed = require("./seed");
@@ -46,9 +48,26 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Middleware for flash messages
+app.use(flash());
+
 // Middleware to get the current logged in user
 app.use((req, res, next) => {
     res.locals.user = req.user;
+
+    // Get flash messages
+    var msgs = req.flash();
+    var messages = null;
+    for(var type in msgs) {
+        for(var i=0; i< msgs[type].length; i++) {
+            (messages = messages || []).push({
+                type: type,
+                msg: msgs[type][i]
+            });
+        }
+    }
+    res.locals.messages = messages;
+
     next();
 })
 
