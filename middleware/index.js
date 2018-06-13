@@ -8,11 +8,13 @@ var Middleware = function() {
             o.findById(req.params[id], (err, retObj) => {
                 if(err) {
                     console.log(err);
+                    req.flash("danger", "An error occurred while retrieving data from the database.")
                     res.redirect("back");
                 } else {
                     if(retObj.author.id.equals(req.user.id)) {
                         next();
                     } else {
+                        req.flash("warning", "You are not allowed to modify something that you are not the author of.")
                         res.redirect("back");
                     }
                 }

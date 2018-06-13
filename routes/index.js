@@ -17,11 +17,13 @@ router.post("/register", (req, res) => {
     User.register(new User({username: req.body.username}), req.body.password, (err, user) => {
         if(err) {
             console.log(err);
-            return res.render("register");
+            req.flash("warning", err.message);
+            res.redirect("back");
+        } else {
+            passport.authenticate("local")(req, res, () => {
+                res.redirect("/campgrounds");
+            })
         }
-        passport.authenticate("local")(req, res, () => {
-            res.redirect("/campgrounds");
-        })
     });
 })
 
@@ -39,16 +41,9 @@ router.post("/login", passport.authenticate("local", {
 
 // Logout route
 router.get("/logout", (req, res) => {
+    req.flash("success", "Successfully logged out " + res.locals.user.username);
     req.logout();
     res.redirect("/campgrounds");
 })
-
-// Middleware
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-}
 
 module.exports = router;
