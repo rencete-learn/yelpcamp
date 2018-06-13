@@ -34,4 +34,25 @@ Middleware.prototype.isLoggedIn = function(req, res, next) {
     res.redirect("/login");
 }
 
+Middleware.prototype.setFlashMsgs = function(req, res) {
+    // Get flash messages
+    var msgs = req.flash();
+    var messages = null;
+    for(var type in msgs) {
+        for(var i=0; i< msgs[type].length; i++) {
+            (messages = messages || []).push({
+                type: type,
+                msg: msgs[type][i]
+            });
+        }
+    }
+    res.locals.messages = messages;
+}
+
+Middleware.prototype.setResponseLocals = function(req, res, next) {
+    res.locals.user = req.user;
+    Middleware.prototype.setFlashMsgs(req, res);
+    next();
+}
+
 module.exports = new Middleware();

@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var methodOverride = require("method-override");
 var passport = require("passport");
 var localStrategy = require("passport-local");
+var middleware = require("./middleware"); // custom middleware
 // Add models
 var User = require("./models/User");
 // Add routes
@@ -52,25 +53,8 @@ passport.deserializeUser(User.deserializeUser());
 // Middleware for flash messages
 app.use(flash());
 
-// Middleware to get the current logged in user
-app.use((req, res, next) => {
-    res.locals.user = req.user;
-
-    // Get flash messages
-    var msgs = req.flash();
-    var messages = null;
-    for(var type in msgs) {
-        for(var i=0; i< msgs[type].length; i++) {
-            (messages = messages || []).push({
-                type: type,
-                msg: msgs[type][i]
-            });
-        }
-    }
-    res.locals.messages = messages;
-
-    next();
-})
+// Middleware to set the response local variables
+app.use(middleware.setResponseLocals);
 
 // Use the routes
 app.use("/", indexRoutes);
