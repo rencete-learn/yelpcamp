@@ -18,15 +18,11 @@ router.get("/", (req, res) => {
 
 // Handle CREATE requests to the "/campgrounds" page
 router.post("/", middleware.isLoggedIn, (req, res) => {
-    var newCG = {
-        name: req.body.name,
-        image: req.body.image,
-        description: req.body.description,
-        author: {
-            id: req.user.id,
-            username: req.user.username
-        }
-    };
+    var newCG = req.body.campground;
+    newCG.author = {
+        id: req.user.id,
+        username: req.user.username
+    }
     Campground.create(newCG, (err, campground) => {
         if(err) {
             console.log(err);
