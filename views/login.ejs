@@ -6,15 +6,26 @@
             <h4 class="text-center">Login to your account</h4>
             <div class="card">
                 <form class="card-body" action="/login" method="post">
-                    <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </div>
                         <input class="form-control" type="text" name="username" placeholder="username">
                     </div>
-                    <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fas fa-unlock"></i>
+                            </span>
+                        </div>
                         <input class="form-control" type="password" name="password" placeholder="password">
                     </div>
                     <input class="btn btn-primary w-100" type="submit" value="Login">
                 </form>
             </div>
+            <a href="/campgrounds">Go back</a>
         </div>
     </div>
 </div>
