@@ -1,33 +1,47 @@
-<% include partials/header %>
-
-<div class="container">
-    <div class="row justify-content-sm-center">
-        <div class="col-sm-8 col-md-6 col-lg-5 col-xl-4">
-            <h4 class="text-center">Login to your account</h4>
-            <div class="card">
-                <form class="card-body" action="/login" method="post">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="fas fa-user"></i>
-                            </span>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>YelpCamp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/height-100.css">
+    <script defer src="/lib/fontawesome/fa-solid.min.js"></script>
+    <script defer src="/lib/fontawesome/fontawesome.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid d-flex flex-column h-100">
+        <% include partials/navbar %>
+        <% include partials/alerts %>
+    
+        <div class="row flex-grow-1 justify-content-sm-center align-items-center">
+            <div class="col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                <h4 class="text-center">Login to your account</h4>
+                <div class="card">
+                    <form class="card-body" action="/login" method="post">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                            </div>
+                            <input class="form-control" type="text" name="username" placeholder="username">
                         </div>
-                        <input class="form-control" type="text" name="username" placeholder="username">
-                    </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <i class="fas fa-unlock"></i>
-                            </span>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fas fa-unlock"></i>
+                                </span>
+                            </div>
+                            <input class="form-control" type="password" name="password" placeholder="password">
                         </div>
-                        <input class="form-control" type="password" name="password" placeholder="password">
-                    </div>
-                    <input class="btn btn-primary w-100" type="submit" value="Login">
-                </form>
+                        <input class="btn btn-primary w-100" type="submit" value="Login">
+                    </form>
+                </div>
+                <a href="/campgrounds">Go back</a>
             </div>
-            <a href="/campgrounds">Go back</a>
         </div>
+        
+        <% include partials/footer %>
     </div>
-</div>
-
-<% include partials/footer %>
